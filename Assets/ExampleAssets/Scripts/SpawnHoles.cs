@@ -58,7 +58,6 @@ public class SpawnHoles : MonoBehaviour
             // Select random plane from list of trackables
             TrackableId planeId = trackableIDList[GetRandomPlane()];
             ARPlane holePlane = m_PlaneManager.GetPlane(planeId);
-            Debug.Log("Current Plane: " + holePlane);
 
             // Get random positions on plane (TODO)
             Vector3 pos = holePlane.center;
@@ -66,7 +65,9 @@ public class SpawnHoles : MonoBehaviour
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
             GameObject newHole = Instantiate(holePrefab, anchor.transform);
-            Debug.Log("POS: " + newHole.transform.position);
+            if (holePlane.alignment == PlaneAlignment.Vertical) {
+                newHole.transform.Rotate(90, 0, 0);
+            }
 
             // Check if anchor is null before storing anchor
             if (anchor == null)
@@ -83,7 +84,6 @@ public class SpawnHoles : MonoBehaviour
 
     private int GetRandomPlane() {
         int index = Random.Range(0, trackableIDList.Count);
-        Debug.Log("RANDOMLY SELECTED: " + trackableIDList[index]);
         return index;
     }
 
@@ -91,6 +91,5 @@ public class SpawnHoles : MonoBehaviour
         foreach (ARPlane plane in m_PlaneManager.trackables) {
             trackableIDList.Add(plane.trackableId);
         }
-        Debug.Log("COUNT: " + trackableIDList.Count);
     }
 }
