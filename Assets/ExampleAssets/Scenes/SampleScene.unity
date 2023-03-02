@@ -384,7 +384,7 @@ MonoBehaviour:
   activeWallHoles: 0
   activeFloorHoles: 0
   maxHoles: 3
-  holePrefab: {fileID: 7414126791596113512, guid: fe573e7abb8af466791f07600c0785e3,
+  holePrefab: {fileID: 3278414199924904989, guid: 4d837dc1668b841eb86f7a532c5d8956,
     type: 3}
 --- !u!1 &705507993
 GameObject:
