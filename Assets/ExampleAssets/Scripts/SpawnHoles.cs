@@ -60,13 +60,21 @@ public class SpawnHoles : MonoBehaviour
             ARPlane holePlane = m_PlaneManager.GetPlane(planeId);
 
             // Get random positions on plane (TODO)
+            // For development purposes, the holes currently spawn in the center of the plane
+            // (I believe) the planes are polygons. Therefore, we will need to determine how
+            // we can check to ensure that the holes will spawn within the plane via the list
+            // if boundaries found.
             Vector3 pos = holePlane.center;
+            Vector2[] boundaries = holePlane.boundary.ToArray();
 
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
             GameObject newHole = Instantiate(holePrefab, anchor.transform);
             if (holePlane.alignment == PlaneAlignment.Vertical) {
                 newHole.transform.Rotate(90, 0, 0);
+                activeWallHoles++;
+            } else {
+                activeFloorHoles++;
             }
 
             // Check if anchor is null before storing anchor
