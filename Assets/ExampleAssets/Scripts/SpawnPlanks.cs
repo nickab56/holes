@@ -21,11 +21,12 @@ public class SpawnPlanks : MonoBehaviour
     private List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
     private List<ARAnchor> m_AnchorPoints;
     private ARAnchorManager m_AnchorManager;
+    
     private Camera arCam;
-
-    // Private util vars
     private Vector3 camPoint;
     private ARPlane currentPlane;
+
+    private List<Vector3> SpawnPos;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,7 @@ public class SpawnPlanks : MonoBehaviour
         m_PlaneManager = GetComponent<ARPlaneManager>();
         m_AnchorManager = GetComponent<ARAnchorManager>();
         m_AnchorPoints = new List<ARAnchor>();
+        SpawnPos = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -49,8 +51,8 @@ public class SpawnPlanks : MonoBehaviour
     {
         if (DisplayPlank != null) {
             MoveDisplayPlank();
+            GetInput();
         }
-        GetInput();
     }
 
     private void GetInput() {
@@ -99,6 +101,9 @@ public class SpawnPlanks : MonoBehaviour
         ARAnchor anchor = m_AnchorManager.AttachAnchor(PlankPlane, new Pose(AnchorPos, Quaternion.identity));
         SpawnedPlank = Instantiate(PlankPrefab, anchor.transform);
 
+        // Store plank's position
+        SpawnPos.Add(SpawnedPlank.transform.position);
+
         // Check if anchor is null before storing anchor
         if (anchor == null)
         {
@@ -111,12 +116,19 @@ public class SpawnPlanks : MonoBehaviour
         }
     }
 
-    public void RemoveAllAnchors()
+    private void RemoveAllAnchors()
     {
         foreach (var anchor in m_AnchorPoints)
         {
             Destroy(anchor);
         }
         m_AnchorPoints.Clear();
+    }
+
+    public void ResetPlanks() {
+        GameObject[] planks = GameObject.FindGameObjectsWithTag("Plank");
+        for (int i = 0; i < planks.Length; i++) {
+            planks[i].transform.position = SpawnPos[i];
+        }
     }
 }

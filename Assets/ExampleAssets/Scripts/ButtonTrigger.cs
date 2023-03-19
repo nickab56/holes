@@ -5,13 +5,12 @@ using UnityEngine;
 public class ButtonTrigger : MonoBehaviour
 {
 
-    public GameObject ARorigin;
-    private SpawnHoles spawnHoles;
+    public SceneManager sceneManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        spawnHoles = ARorigin.GetComponent<SpawnHoles>();
+
     }
 
     // Update is called once per frame
@@ -20,8 +19,17 @@ public class ButtonTrigger : MonoBehaviour
         
     }
 
-    public void HoleSpawn() {
-        Debug.Log("EXECUTED HOLE SPAWN");
-        spawnHoles.enabled = true;
+    public void ReadyForNextStage() {
+        switch (sceneManager.CurrentStage) {
+            case SceneManager.Stage.ROOM_MAP:
+                sceneManager.UpdateStage(SceneManager.Stage.PLACE_PLANKS);
+                break;
+            case SceneManager.Stage.PLACE_PLANKS:
+                sceneManager.UpdateStage(SceneManager.Stage.GRACE);
+                break;
+            default:
+                Debug.Log("Error transitioning stages: " + sceneManager.CurrentStage);
+                break;
+        }
     }
 }

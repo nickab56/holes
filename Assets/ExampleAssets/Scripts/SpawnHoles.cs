@@ -6,10 +6,6 @@ using UnityEngine.XR.ARSubsystems;
 
 public class SpawnHoles : MonoBehaviour
 {
-
-    public int activeWallHoles;
-    public int activeFloorHoles;
-
     public int maxHoles = 3;
 
     public GameObject holePrefab;
@@ -23,9 +19,6 @@ public class SpawnHoles : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activeWallHoles = 0;
-        activeFloorHoles = 0;
-        
         m_AnchorManager = GetComponent<ARAnchorManager>(); // Process all anchors and update their position and rotation
         m_PlaneManager = GetComponent<ARPlaneManager>(); // Surface detection
         m_AnchorPoints = new List<ARAnchor>();
@@ -42,21 +35,15 @@ public class SpawnHoles : MonoBehaviour
         
     }
 
-    // Removes all the anchors that have been created.
-    public void RemoveAllAnchors()
-    {
-        foreach (var anchor in m_AnchorPoints)
-        {
-            Destroy(anchor);
-        }
-        m_AnchorPoints.Clear();
-    }
-
-    private void GenerateHoles() {
+    public void GenerateHoles() {
         // For each hole
+        Debug.Log("Beginning to Generate Holes...");
+        Debug.Log("List of trackable planes: " + trackableIDList.Count);
         for (int j = 0; j < maxHoles; j++) {
             // Select random plane from list of trackables
+            Debug.Log("Getting plane id");
             TrackableId planeId = trackableIDList[GetRandomPlane()];
+            Debug.Log("Attempting to get plane");
             ARPlane holePlane = m_PlaneManager.GetPlane(planeId);
 
             // Get random positions on plane (TODO)
@@ -65,16 +52,13 @@ public class SpawnHoles : MonoBehaviour
             // we can check to ensure that the holes will spawn within the plane via the list
             // if boundaries found.
             Vector3 pos = holePlane.center;
-            Vector2[] boundaries = holePlane.boundary.ToArray();
+            //Vector2[] boundaries = holePlane.boundary.ToArray();
 
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
             GameObject newHole = Instantiate(holePrefab, anchor.transform);
             if (holePlane.alignment == PlaneAlignment.Vertical) {
                 newHole.transform.Rotate(90, 0, 0);
-                activeWallHoles++;
-            } else {
-                activeFloorHoles++;
             }
 
             // Check if anchor is null before storing anchor
@@ -91,13 +75,35 @@ public class SpawnHoles : MonoBehaviour
     }
 
     private int GetRandomPlane() {
+        Debug.Log("LIST COUNT: " + trackableIDList.Count);
         int index = Random.Range(0, trackableIDList.Count);
         return index;
     }
 
     private void GetTrackablePlanes() {
+        Debug.Log("Finding all trackable planes...");
         foreach (ARPlane plane in m_PlaneManager.trackables) {
             trackableIDList.Add(plane.trackableId);
         }
+        Debug.Log("Finished looking for planes. " + trackableIDList.Count + " found.");
+    }
+
+    // Removes all the anchors that have been created.
+    private void RemoveAllAnchors()
+    {
+        foreach (var anchor in m_AnchorPoints)
+        {
+            Destroy(anchor);
+        }
+        m_AnchorPoints.Clear();
+    }
+
+    // Remove all holes
+    public void RemoveAllHoles() {
+        GameObject[] holes = GameObject.FindGameObjectsWithTag("Hole");
+        foreach (GameObject hole in holes) {
+            Destroy(hole);
+        }
+        RemoveAllAnchors();
     }
 }
