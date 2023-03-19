@@ -13,6 +13,10 @@ public class PickUpPlank : MonoBehaviour
 
     Camera arCam;
     GameObject SpawnedPlanks;
+
+    private Mesh mesh;
+    private Vector3[] newVerts;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,16 +39,10 @@ public class PickUpPlank : MonoBehaviour
         {
             if(Input.GetTouch(0).phase == TouchPhase.Began && SpawnedPlanks == null)
             {
-                if(Physics.Raycast(ray, out hit))
+                if(Physics.Raycast(ray, out hit) && hit.collider.gameObject.tag == "Plank")
                 {   
-                    if(hit.collider.gameObject.tag == "Spawnable")
-                    {
-                        SpawnedPlanks = hit.collider.gameObject;
-                    }
-                    else
-                    {
-                        SpawnPrefab(m_Hits[0].pose.position);
-                    }
+                    SpawnedPlanks = hit.collider.gameObject;
+                    ScaleMesh(1.5f);
                 }
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Moved && SpawnedPlanks != null)
@@ -53,13 +51,19 @@ public class PickUpPlank : MonoBehaviour
             }
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
+                ScaleMesh(1/1.5f);
                 SpawnedPlanks = null;
             }
         }
     }
 
-    private void SpawnPrefab(Vector3 SpawnPosition)
-    {
-        SpawnedPlanks = Instantiate(PlanksPrefab, SpawnPosition, Quaternion.identity);
+    private void ScaleMesh(float scalar) {
+        mesh = SpawnedPlanks.GetComponent<MeshFilter>().mesh;
+        newVerts = mesh.vertices;
+        for(int i = 0; i < newVerts.Length; i++)
+        {
+            newVerts[i] *= scalar;
+        }
+        mesh.vertices = newVerts;
     }
 }

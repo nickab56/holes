@@ -14,6 +14,7 @@ public class SceneManager : MonoBehaviour
     public GameObject m_SessionManager;
     public GameObject NextBtn;
     public float GracePeriod;
+    public GameObject m_SpawnManager;
 
     // Timer
     public float Timer; 
@@ -63,6 +64,7 @@ public class SceneManager : MonoBehaviour
                     // Otherwise, generate holes
                     m_SessionManager.GetComponent<SpawnHoles>().GenerateHoles();
                 }
+                m_SpawnManager.GetComponent<PickUpPlank>().enabled = true;
                 ObjectiveTxt.text = "Block holes";
                 NextBtn.SetActive(false);
                 break;
@@ -74,6 +76,7 @@ public class SceneManager : MonoBehaviour
                     isTiming = false;
                     m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
                     m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
+                    m_SpawnManager.GetComponent<PickUpPlank>().enabled = false;
                 }
                 // Initiate grace period
                 StartCoroutine(BeginGracePeriod(GracePeriod, Stage.LEVEL_START));
