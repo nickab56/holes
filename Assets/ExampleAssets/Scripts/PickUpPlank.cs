@@ -39,10 +39,13 @@ public class PickUpPlank : MonoBehaviour
         {
             if(Input.GetTouch(0).phase == TouchPhase.Began && SpawnedPlanks == null)
             {
-                if(Physics.Raycast(ray, out hit) && hit.collider.gameObject.tag == "Plank")
-                {   
-                    SpawnedPlanks = hit.collider.gameObject;
-                    ScaleMesh(1.5f);
+                if(Physics.Raycast(ray, out hit))
+                {
+                    if(hit.collider.gameObject.tag == "Plank")
+                    {
+                        SpawnedPlanks = hit.collider.gameObject;
+                        ScaleMesh(1.5f);
+                    }
                 }
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Moved && SpawnedPlanks != null)
@@ -58,6 +61,7 @@ public class PickUpPlank : MonoBehaviour
     }
 
     private void ScaleMesh(float scalar) {
+        Debug.Log("Scaling mesh...");
         mesh = SpawnedPlanks.GetComponent<MeshFilter>().mesh;
         newVerts = mesh.vertices;
         for(int i = 0; i < newVerts.Length; i++)
@@ -65,5 +69,6 @@ public class PickUpPlank : MonoBehaviour
             newVerts[i] *= scalar;
         }
         mesh.vertices = newVerts;
+        mesh.RecalculateBounds();
     }
 }
