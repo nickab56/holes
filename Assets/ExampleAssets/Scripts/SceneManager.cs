@@ -10,6 +10,8 @@ public class SceneManager : MonoBehaviour
     public enum Stage { None, ROOM_MAP, PLACE_PLANKS, LEVEL_START, GRACE, GAME_OVER }
 
     public Stage CurrentStage;
+    public int currentLevel = 1;
+    public int currentNumHoles;
     public TMP_Text ObjectiveTxt;
     public GameObject m_SessionManager;
     public GameObject NextBtn;
@@ -74,6 +76,7 @@ public class SceneManager : MonoBehaviour
                     // Player has survived the level. Reset planks, destroy holes, and prepare
                     // for the next level
                     isTiming = false;
+                    NextLevel();
                     m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
                     m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
                     m_SpawnManager.GetComponent<PickUpPlank>().enabled = false;
@@ -90,6 +93,13 @@ public class SceneManager : MonoBehaviour
                 Debug.Log("There was an error updating stages.");
                 break;
         }
+    }
+
+    public void NextLevel()
+    {
+        currentLevel++;
+        GetComponent<SpawnHoles>().maxHoles = (int) (currentNumHoles * 1.25);
+        GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
     }
 
     IEnumerator BeginGracePeriod(float time, Stage NewStage) {
