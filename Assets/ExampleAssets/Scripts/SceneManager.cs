@@ -11,8 +11,8 @@ public class SceneManager : MonoBehaviour
 
     public Stage CurrentStage;
     public int currentLevel = 1;
-    public int currentNumHoles;
     public TMP_Text ObjectiveTxt;
+    public TMP_Text lvlText;
     public GameObject m_SessionManager;
     public GameObject NextBtn;
     public float GracePeriod;
@@ -98,7 +98,8 @@ public class SceneManager : MonoBehaviour
     public void NextLevel()
     {
         currentLevel++;
-        GetComponent<SpawnHoles>().maxHoles = (int) (currentNumHoles * 1.25);
+        lvlText.text = "Level: " + currentLevel;
+        GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
         GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
     }
 

@@ -10,10 +10,10 @@ public class SpawnPlanks : MonoBehaviour
     public int maxPlanks = 3;
 
     // Game Objects
-    public GameObject PlankPrefab;
-    private GameObject SpawnedPlank;
-    public GameObject DisplayPlankPrefab; 
-    private GameObject DisplayPlank;
+    public GameObject plankPrefab;
+    private GameObject spawnedPlank;
+    public GameObject displayPlankPrefab; 
+    private GameObject displayPlank;
 
     // Private vars
     private ARRaycastManager m_RaycastManager;
@@ -31,12 +31,12 @@ public class SpawnPlanks : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnedPlank = null;
+        spawnedPlank = null;
         arCam = GameObject.Find("AR Camera").GetComponent<Camera>();
 
         // Start Spawning Display Plank
         camPoint = arCam.ScreenToWorldPoint(new Vector3(Screen.width/2, Screen.height/2, arCam.nearClipPlane));
-        DisplayPlank = Instantiate(DisplayPlankPrefab, camPoint, Quaternion.identity);
+        displayPlank = Instantiate(displayPlankPrefab, camPoint, Quaternion.identity);
 
         // Get Components
         m_RaycastManager = GetComponent<ARRaycastManager>();
@@ -49,7 +49,7 @@ public class SpawnPlanks : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (DisplayPlank != null) {
+        if (displayPlank != null) {
             MoveDisplayPlank();
             GetInput();
         }
@@ -60,7 +60,7 @@ public class SpawnPlanks : MonoBehaviour
             return;
 
         // Check if player is touching
-        if (Input.GetTouch(0).phase == TouchPhase.Began && SpawnedPlank == null) {
+        if (Input.GetTouch(0).phase == TouchPhase.Began && spawnedPlank == null) {
             // Spawn planks
             SpawnAllPlanks();
         }
@@ -70,12 +70,12 @@ public class SpawnPlanks : MonoBehaviour
     {
         for (int i = 0; i < maxPlanks; i++) {
             // Spawn planks using display plank's position
-            Vector3 PlankPos = new(DisplayPlank.transform.position.x, DisplayPlank.transform.position.y+(i*.1f), DisplayPlank.transform.position.z);
+            Vector3 PlankPos = new(displayPlank.transform.position.x, displayPlank.transform.position.y+(i*.1f), displayPlank.transform.position.z);
             AddPlank(currentPlane, PlankPos);
-            Debug.Log("Plank #" + i + ": " + SpawnedPlank.transform.position);   
+            Debug.Log("Plank #" + i + ": " + spawnedPlank.transform.position);   
         }
         // Display plank is no longer needed
-        Destroy(DisplayPlank);
+        Destroy(displayPlank);
     }
 
     private void MoveDisplayPlank() {
@@ -87,7 +87,7 @@ public class SpawnPlanks : MonoBehaviour
         if (m_RaycastManager.Raycast(camPoint, m_Hits, TrackableType.PlaneWithinPolygon) && m_PlaneManager.GetPlane(m_Hits[0].trackableId)) {
             // Update display plank's position
             currentPlane = m_PlaneManager.GetPlane(m_Hits[0].trackableId);
-            DisplayPlank.transform.position = m_Hits[0].pose.position;
+            displayPlank.transform.position = m_Hits[0].pose.position;
         }
     }
 
@@ -99,10 +99,10 @@ public class SpawnPlanks : MonoBehaviour
 
         // Valid plane found. Instantiate plank and attach it to an anchor          
         ARAnchor anchor = m_AnchorManager.AttachAnchor(PlankPlane, new Pose(AnchorPos, Quaternion.identity));
-        SpawnedPlank = Instantiate(PlankPrefab, anchor.transform);
+        spawnedPlank = Instantiate(plankPrefab, anchor.transform);
 
         // Store plank's position
-        SpawnPos.Add(SpawnedPlank.transform.position);
+        SpawnPos.Add(spawnedPlank.transform.position);
 
         // Check if anchor is null before storing anchor
         if (anchor == null)

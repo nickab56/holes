@@ -12,7 +12,7 @@ public class PickUpPlank : MonoBehaviour
     public GameObject PlanksPrefab;
 
     Camera arCam;
-    GameObject SpawnedPlanks;
+    GameObject spawnedPlanks;
 
     private Mesh mesh;
     private Vector3[] newVerts;
@@ -21,7 +21,7 @@ public class PickUpPlank : MonoBehaviour
     void Start()
     {
         arCam = GameObject.Find("AR Camera").GetComponent<Camera>();
-        SpawnedPlanks = null;
+        spawnedPlanks = null;
     }
 
     // Update is called once per frame
@@ -37,32 +37,32 @@ public class PickUpPlank : MonoBehaviour
 
         if(m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits))
         {
-            if(Input.GetTouch(0).phase == TouchPhase.Began && SpawnedPlanks == null)
+            if(Input.GetTouch(0).phase == TouchPhase.Began && spawnedPlanks == null)
             {
                 if(Physics.Raycast(ray, out hit))
                 {
                     if(hit.collider.gameObject.tag == "Plank")
                     {
-                        SpawnedPlanks = hit.collider.gameObject;
+                        spawnedPlanks = hit.collider.gameObject;
                         ScaleMesh(1.5f);
                     }
                 }
             }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && SpawnedPlanks != null)
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && spawnedPlanks != null)
             {
-                SpawnedPlanks.transform.position = m_Hits[0].pose.position;
+                spawnedPlanks.transform.position = m_Hits[0].pose.position;
             }
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
                 ScaleMesh(1/1.5f);
-                SpawnedPlanks = null;
+                spawnedPlanks = null;
             }
         }
     }
 
     private void ScaleMesh(float scalar) {
         Debug.Log("Scaling mesh...");
-        mesh = SpawnedPlanks.GetComponent<MeshFilter>().mesh;
+        mesh = spawnedPlanks.GetComponent<MeshFilter>().mesh;
         newVerts = mesh.vertices;
         for(int i = 0; i < newVerts.Length; i++)
         {
