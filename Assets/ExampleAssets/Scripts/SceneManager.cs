@@ -18,6 +18,9 @@ public class SceneManager : MonoBehaviour
     public float GracePeriod;
     public GameObject m_SpawnManager;
 
+    public int numOfActiveHoles = 0;
+    public int numOfUsablePlanks = 0;
+
     // Timer
     public float Timer; 
     private bool isTiming;
@@ -39,6 +42,9 @@ public class SceneManager : MonoBehaviour
             if (Timer <= 0) {
                 UpdateStage(Stage.GAME_OVER);
             }    
+        }
+        if (numOfActiveHoles == 0) {
+            UpdateStage(Stage.GRACE);
         }
     }
 
@@ -81,6 +87,9 @@ public class SceneManager : MonoBehaviour
                     m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
                     m_SpawnManager.GetComponent<PickUpPlank>().enabled = false;
                 }
+                // Set number of active holes and usable holes
+                numOfActiveHoles = m_SessionManager.GetComponent<SpawnHoles>().maxHoles;
+                numOfUsablePlanks = m_SessionManager.GetComponent<SpawnPlanks>().maxPlanks;
                 // Initiate grace period
                 StartCoroutine(BeginGracePeriod(GracePeriod, Stage.LEVEL_START));
                 ObjectiveTxt.text = "Grace period";
