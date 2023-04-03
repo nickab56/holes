@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public class SceneManager : MonoBehaviour
 {
-
     public enum Stage { None, ROOM_MAP, PLACE_PLANKS, LEVEL_START, GRACE, GAME_OVER }
-
     public Stage CurrentStage;
-    public int currentLevel = 1;
-    public TMP_Text ObjectiveTxt;
-    public TMP_Text lvlText;
+
     public GameObject m_SessionManager;
     public GameObject NextBtn;
-    public float GracePeriod;
     public GameObject m_SpawnManager;
 
+    public TMP_Text ObjectiveTxt;
+    public TMP_Text lvlText;
+
+    public int currentLevel = 1;
+    public float GracePeriod;
     public int numOfActiveHoles = 0;
     public int numOfUsablePlanks = 0;
 
@@ -28,6 +28,7 @@ public class SceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Timer = 30f;
         isTiming = false;
         CurrentStage = Stage.None;
         // Begin setup
@@ -73,6 +74,9 @@ public class SceneManager : MonoBehaviour
                     m_SessionManager.GetComponent<SpawnHoles>().GenerateHoles();
                 }
                 m_SpawnManager.GetComponent<PickUpPlank>().enabled = true;
+                // Begin Timer
+                isTiming = true;
+                // Update UI
                 ObjectiveTxt.text = "Block holes";
                 NextBtn.SetActive(false);
                 break;
@@ -82,6 +86,7 @@ public class SceneManager : MonoBehaviour
                     // Player has survived the level. Reset planks, destroy holes, and prepare
                     // for the next level
                     isTiming = false;
+                    Timer = 30;
                     NextLevel();
                     m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
                     m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
