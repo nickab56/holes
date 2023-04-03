@@ -61,7 +61,6 @@ public class PickUpPlank : MonoBehaviour
     }
 
     private void ScaleMesh(float scalar) {
-        Debug.Log("Scaling mesh...");
         mesh = spawnedPlanks.GetComponent<MeshFilter>().mesh;
         newVerts = mesh.vertices;
         for(int i = 0; i < newVerts.Length; i++)
