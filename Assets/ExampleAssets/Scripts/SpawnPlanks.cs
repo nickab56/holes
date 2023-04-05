@@ -15,6 +15,8 @@ public class SpawnPlanks : MonoBehaviour
     public GameObject displayPlankPrefab; 
     private GameObject displayPlank;
 
+    public SceneManager sceneManager;
+
     // Private vars
     private ARRaycastManager m_RaycastManager;
     private ARPlaneManager m_PlaneManager;
@@ -100,6 +102,7 @@ public class SpawnPlanks : MonoBehaviour
         // Valid plane found. Instantiate plank and attach it to an anchor          
         ARAnchor anchor = m_AnchorManager.AttachAnchor(PlankPlane, new Pose(AnchorPos, Quaternion.identity));
         spawnedPlank = Instantiate(plankPrefab, anchor.transform);
+        spawnedPlank.GetComponent<BlockHole>().sceneManager = sceneManager;
 
         // Store plank's position
         SpawnPos.Add(spawnedPlank.transform.position);
@@ -126,9 +129,10 @@ public class SpawnPlanks : MonoBehaviour
     }
 
     public void ResetPlanks() {
-        GameObject[] planks = GameObject.FindGameObjectsWithTag("Plank");
+        GameObject[] planks = GameObject.FindGameObjectsWithTag("Unusable");
         for (int i = 0; i < planks.Length; i++) {
             planks[i].transform.position = SpawnPos[i];
+            planks[i].tag = "Plank";
         }
     }
 }

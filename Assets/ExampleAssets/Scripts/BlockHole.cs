@@ -24,6 +24,7 @@ public class BlockHole : MonoBehaviour
             Vector3 holePos = collider.gameObject.transform.position;
             Destroy(collider.gameObject);
             this.transform.position = holePos;
+            this.tag = "Unusable";
             // Decrease number of active holes
             sceneManager.numOfActiveHoles--;
             sceneManager.numOfUsablePlanks--;

@@ -18,8 +18,8 @@ public class SceneManager : MonoBehaviour
 
     public int currentLevel = 1;
     public float GracePeriod;
-    public int numOfActiveHoles = 0;
-    public int numOfUsablePlanks = 0;
+    public int numOfActiveHoles = 1;
+    public int numOfUsablePlanks = 1;
 
     // Timer
     public float Timer; 
@@ -73,7 +73,7 @@ public class SceneManager : MonoBehaviour
                     // Otherwise, generate holes
                     m_SessionManager.GetComponent<SpawnHoles>().GenerateHoles();
                 }
-                m_SpawnManager.GetComponent<PickUpPlank>().enabled = true;
+                m_SpawnManager.GetComponent<PickupPlank2>().enabled = true;
                 // Begin Timer
                 isTiming = true;
                 // Update UI
@@ -90,7 +90,7 @@ public class SceneManager : MonoBehaviour
                     NextLevel();
                     m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
                     m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
-                    m_SpawnManager.GetComponent<PickUpPlank>().enabled = false;
+                    m_SpawnManager.GetComponent<PickupPlank2>().enabled = false;
                 }
                 // Set number of active holes and usable holes
                 numOfActiveHoles = m_SessionManager.GetComponent<SpawnHoles>().maxHoles;
@@ -113,8 +113,8 @@ public class SceneManager : MonoBehaviour
     {
         currentLevel++;
         lvlText.text = "Level: " + currentLevel;
-        GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
-        GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
+        //GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
+        //GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
     }
 
     IEnumerator BeginGracePeriod(float time, Stage NewStage) {

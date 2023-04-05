@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
-public class PickUpPlank2 : MonoBehaviour
+public class PickupPlank2 : MonoBehaviour
 {
     public ARRaycastManager m_RaycastManager;
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
@@ -33,7 +34,7 @@ public class PickUpPlank2 : MonoBehaviour
         RaycastHit hit;
         Ray ray = arCam.ScreenPointToRay(Input.GetTouch(0).position);
 
-        if (m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits))
+        if (m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits, TrackableType.PlaneWithinPolygon))
         {
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
@@ -44,12 +45,13 @@ public class PickUpPlank2 : MonoBehaviour
                         Destroy(hit.collider.gameObject);
                         isHoldingPlank = true;
                         plankUI.enabled = true;
-                    } else
-                    {
-                        Instantiate(PlanksPrefab, hit.point, Quaternion.identity);
-                        isHoldingPlank = false;
-                        plankUI.enabled = false;
                     }
+                } 
+                else
+                {
+                    Instantiate(PlanksPrefab, m_Hits[0].pose.position, Quaternion.identity);
+                    isHoldingPlank = false;
+                    plankUI.enabled = false;
                 }
             }
         }
