@@ -52,6 +52,7 @@ public class SpawnHoles : MonoBehaviour
             // we can check to ensure that the holes will spawn within the plane via the list
             // if boundaries found.
             Vector3 pos = holePlane.center;
+            Debug.Log("Hole #" + (j+1) + " POS: " + pos);
             //Vector2[] boundaries = holePlane.boundary.ToArray();
 
             // Instantiate hole
