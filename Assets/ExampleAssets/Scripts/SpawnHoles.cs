@@ -38,7 +38,6 @@ public class SpawnHoles : MonoBehaviour
     public void GenerateHoles() {
         // For each hole
         Debug.Log("Beginning to Generate Holes...");
-        Debug.Log("List of trackable planes: " + trackableIDList.Count);
         for (int j = 0; j < maxHoles; j++) {
             // Select random plane from list of trackables
             Debug.Log("Getting plane id");
@@ -52,8 +51,22 @@ public class SpawnHoles : MonoBehaviour
             // we can check to ensure that the holes will spawn within the plane via the list
             // if boundaries found.
             Vector3 pos = holePlane.center;
-            Debug.Log("Hole #" + (j+1) + " POS: " + pos);
             //Vector2[] boundaries = holePlane.boundary.ToArray();
+
+            if (trackableIDList.Count >= maxHoles) {
+                Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+                foreach (var hitCollider in hitColliders)
+                {
+                    hitCollider.SendMessage("AddDamage");
+                }
+                while (Physics.CheckSphere(pos, 3)) {
+                    Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+                    foreach (var hitCollider in hitColliders)
+                    {
+                        hitCollider.SendMessage("AddDamage");
+                    }
+                }
+            }
 
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
