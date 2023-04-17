@@ -17,6 +17,8 @@ public class SpawnPlanks : MonoBehaviour
 
     public SceneManager sceneManager;
 
+    public Vector3 plankSpawnPos;
+
     // Private vars
     private ARRaycastManager m_RaycastManager;
     private ARPlaneManager m_PlaneManager;
@@ -27,8 +29,6 @@ public class SpawnPlanks : MonoBehaviour
     private Camera arCam;
     private Vector3 camPoint;
     private ARPlane currentPlane;
-
-    private List<Vector3> SpawnPos;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +45,6 @@ public class SpawnPlanks : MonoBehaviour
         m_PlaneManager = GetComponent<ARPlaneManager>();
         m_AnchorManager = GetComponent<ARAnchorManager>();
         m_AnchorPoints = new List<ARAnchor>();
-        SpawnPos = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -77,6 +76,7 @@ public class SpawnPlanks : MonoBehaviour
             Debug.Log("Plank #" + i + ": " + spawnedPlank.transform.position);   
         }
         // Display plank is no longer needed
+        plankSpawnPos = displayPlank.transform.position;
         Destroy(displayPlank);
     }
 
@@ -104,9 +104,6 @@ public class SpawnPlanks : MonoBehaviour
         spawnedPlank = Instantiate(plankPrefab, anchor.transform);
         spawnedPlank.GetComponent<BlockHole>().sceneManager = sceneManager;
 
-        // Store plank's position
-        SpawnPos.Add(spawnedPlank.transform.position);
-
         // Check if anchor is null before storing anchor
         if (anchor == null)
         {
@@ -129,9 +126,16 @@ public class SpawnPlanks : MonoBehaviour
     }
 
     public void ResetPlanks() {
+        // Destory current planks
         GameObject[] planks = GameObject.FindGameObjectsWithTag("Unusable");
-        for (int i = 0; i < planks.Length; i++) {
-            planks[i].transform.position = SpawnPos[i];
+        foreach (GameObject plank in planks)
+        {
+            Destroy(plank);
+        }
+
+        // Add all new planks
+        for (int i = 0; i < maxPlanks; i++) {
+            planks[i].transform.position = new(plankSpawnPos.x, plankSpawnPos.y + (i * .1f), plankSpawnPos.z);
             planks[i].tag = "Plank";
         }
     }

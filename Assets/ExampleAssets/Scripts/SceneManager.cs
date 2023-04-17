@@ -113,8 +113,8 @@ public class SceneManager : MonoBehaviour
     {
         currentLevel++;
         lvlText.text = "Level: " + currentLevel;
-        //GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
-        //GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
+        GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
+        GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
     }
 
     IEnumerator BeginGracePeriod(float time, Stage NewStage) {

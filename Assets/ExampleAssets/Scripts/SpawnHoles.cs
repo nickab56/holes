@@ -39,34 +39,32 @@ public class SpawnHoles : MonoBehaviour
         // For each hole
         Debug.Log("Beginning to Generate Holes...");
         for (int j = 0; j < maxHoles; j++) {
-            // Select random plane from list of trackables
-            Debug.Log("Getting plane id");
-            TrackableId planeId = trackableIDList[GetRandomPlane()];
-            Debug.Log("Attempting to get plane");
-            ARPlane holePlane = m_PlaneManager.GetPlane(planeId);
+            Vector3 pos;
+            ARPlane holePlane;
 
-            // Get random positions on plane (TODO)
-            // For development purposes, the holes currently spawn in the center of the plane
-            // (I believe) the planes are polygons. Therefore, we will need to determine how
-            // we can check to ensure that the holes will spawn within the plane via the list
-            // if boundaries found.
-            Vector3 pos = holePlane.center;
-            //Vector2[] boundaries = holePlane.boundary.ToArray();
+            // Check to ensure that each hole gets a random spot
+            do
+            {
+                // Select random plane from list of trackables
+                TrackableId planeId = trackableIDList[GetRandomPlane()];
+                holePlane = m_PlaneManager.GetPlane(planeId);
 
-            if (trackableIDList.Count >= maxHoles) {
-                Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-                foreach (var hitCollider in hitColliders)
+                // Get random positions on plane (TODO)
+                // For development purposes, the holes currently spawn in the center of the plane
+                // (I believe) the planes are polygons. Therefore, we will need to determine how
+                // we can check to ensure that the holes will spawn within the plane via the list
+                // if boundaries found.
+                pos = holePlane.center;
+                //Vector2[] boundaries = holePlane.boundary.ToArray();
+
+                if (!IsDuplicate(pos))
                 {
-                    hitCollider.SendMessage("AddDamage");
+                    break;
                 }
-                while (Physics.CheckSphere(pos, 3)) {
-                    Collider[] hitColliders = Physics.OverlapSphere(center, radius);
-                    foreach (var hitCollider in hitColliders)
-                    {
-                        hitCollider.SendMessage("AddDamage");
-                    }
-                }
-            }
+            } while (trackableIDList.Count >= maxHoles);
+
+            Debug.Log("Hole #" + j + ": TrackableId: " + holePlane.trackableId);
+            Debug.Log("Hole #" + j + ": Position: " + pos);
 
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
@@ -89,7 +87,6 @@ public class SpawnHoles : MonoBehaviour
     }
 
     private int GetRandomPlane() {
-        Debug.Log("LIST COUNT: " + trackableIDList.Count);
         int index = Random.Range(0, trackableIDList.Count);
         return index;
     }
@@ -119,5 +116,18 @@ public class SpawnHoles : MonoBehaviour
             Destroy(hole);
         }
         RemoveAllAnchors();
+    }
+
+    private bool IsDuplicate(Vector3 pos)
+    {
+        Collider[] hits = Physics.OverlapSphere(pos, 1f);
+        foreach (var hit in hits)
+        {
+            if (hit.gameObject.CompareTag("Hole"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
