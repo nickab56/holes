@@ -70,7 +70,7 @@ public class SpawnHoles : MonoBehaviour
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
             GameObject newHole = Instantiate(holePrefab, anchor.transform);
             if (holePlane.alignment == PlaneAlignment.Vertical) {
-                newHole.transform.Rotate(90, 0, 0);
+                newHole.transform.Rotate(-90, 0, 0);
             }
 
             // Check if anchor is null before storing anchor

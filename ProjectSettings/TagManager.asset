@@ -8,6 +8,7 @@ TagManager:
   - Hole
   - Plank
   - Unusable
+  - SceneManager
   layers:
   - Default
   - TransparentFX

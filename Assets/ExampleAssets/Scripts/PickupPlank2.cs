@@ -13,6 +13,8 @@ public class PickupPlank2 : MonoBehaviour
     public GameObject PlanksPrefab;
     public RawImage plankUI;
 
+    public SceneManager sceneManager;
+
     private Camera arCam;
     private bool isHoldingPlank;
 
@@ -49,7 +51,8 @@ public class PickupPlank2 : MonoBehaviour
                 } 
                 else
                 {
-                    Instantiate(PlanksPrefab, m_Hits[0].pose.position, Quaternion.identity);
+                    GameObject spawnedPlank = Instantiate(PlanksPrefab, m_Hits[0].pose.position, Quaternion.identity);
+                    spawnedPlank.GetComponent<BlockHole>().sceneManager = sceneManager;
                     isHoldingPlank = false;
                     plankUI.enabled = false;
                 }

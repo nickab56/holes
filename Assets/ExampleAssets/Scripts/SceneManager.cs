@@ -21,6 +21,11 @@ public class SceneManager : MonoBehaviour
     public int numOfActiveHoles = 1;
     public int numOfUsablePlanks = 1;
 
+    // High score implementation
+    private int HighScore = 0;
+    private const string HighScoreKey = "high_score";
+    private const string RecentScoreKey = "recent_score";
+
     // Timer
     public float Timer; 
     private bool isTiming;
@@ -33,6 +38,17 @@ public class SceneManager : MonoBehaviour
         CurrentStage = Stage.None;
         // Begin setup
         UpdateStage(Stage.ROOM_MAP);
+
+        // Check if high score already exists
+        if (PlayerPrefs.HasKey(HighScoreKey))
+        {
+            HighScore = PlayerPrefs.GetInt(HighScoreKey);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(HighScoreKey, currentLevel);
+        }
+        PlayerPrefs.SetInt(RecentScoreKey, currentLevel);
     }
 
     // Update is called once per frame
@@ -41,6 +57,11 @@ public class SceneManager : MonoBehaviour
         if (isTiming) {
             Timer -= Time.deltaTime;
             if (Timer <= 0) {
+                if (currentLevel > HighScore)
+                {
+                    PlayerPrefs.SetInt(HighScoreKey, currentLevel);
+                }
+                PlayerPrefs.SetInt(RecentScoreKey, currentLevel);
                 UpdateStage(Stage.GAME_OVER);
             }    
         }

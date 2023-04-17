@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 188312363}
   m_Layer: 0
   m_Name: SceneManager
-  m_TagString: Untagged
+  m_TagString: SceneManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f840115c64b64d70bdd13f9950d89ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxPlanks: 3
+  maxPlanks: 2
   plankPrefab: {fileID: 4887564257575459238, guid: 52cbe442a1e6a495db3e3c3f238a2dbb,
     type: 3}
   displayPlankPrefab: {fileID: 7359944846930789942, guid: b3dcc720155f94921a5cf6d0981b79e4,
@@ -716,6 +716,7 @@ MonoBehaviour:
   PlanksPrefab: {fileID: 4887564257575459238, guid: 52cbe442a1e6a495db3e3c3f238a2dbb,
     type: 3}
   plankUI: {fileID: 1408259949}
+  sceneManager: {fileID: 188312361}
 --- !u!1 &851569543
 GameObject:
   m_ObjectHideFlags: 0
