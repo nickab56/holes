@@ -30,9 +30,10 @@ public class BlockHole : MonoBehaviour
             Vector3 holePos = collider.gameObject.transform.position;
             Destroy(collider.gameObject);
             this.transform.position = holePos;
-            this.tag = "Unusable";
+            this.gameObject.tag = "Unusable";
             // Decrease number of active holes
             sceneManager.numOfActiveHoles--;
+            Debug.Log("New number of active holes: " + sceneManager.numOfActiveHoles);
             sceneManager.numOfUsablePlanks--;
         }
     }

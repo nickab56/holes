@@ -63,7 +63,11 @@ public class SpawnPlanks : MonoBehaviour
         // Check if player is touching
         if (Input.GetTouch(0).phase == TouchPhase.Began && spawnedPlank == null) {
             // Spawn planks
+            plankSpawnPos = displayPlank.transform.position;
             SpawnAllPlanks();
+
+            // Display plank is no longer needed
+            Destroy(displayPlank);
         }
     }
 
@@ -71,13 +75,10 @@ public class SpawnPlanks : MonoBehaviour
     {
         for (int i = 0; i < maxPlanks; i++) {
             // Spawn planks using display plank's position
-            Vector3 PlankPos = new(displayPlank.transform.position.x, displayPlank.transform.position.y+(i*.1f), displayPlank.transform.position.z);
+            Vector3 PlankPos = new(plankSpawnPos.x, plankSpawnPos.y+(i*.1f), plankSpawnPos.z);
             AddPlank(currentPlane, PlankPos);
             Debug.Log("Plank #" + i + ": " + spawnedPlank.transform.position);   
         }
-        // Display plank is no longer needed
-        plankSpawnPos = displayPlank.transform.position;
-        Destroy(displayPlank);
     }
 
     private void MoveDisplayPlank() {
@@ -134,9 +135,6 @@ public class SpawnPlanks : MonoBehaviour
         }
 
         // Add all new planks
-        for (int i = 0; i < maxPlanks; i++) {
-            planks[i].transform.position = new(plankSpawnPos.x, plankSpawnPos.y + (i * .1f), plankSpawnPos.z);
-            planks[i].tag = "Plank";
-        }
+        SpawnAllPlanks();
     }
 }

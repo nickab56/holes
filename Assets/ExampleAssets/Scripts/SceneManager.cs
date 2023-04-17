@@ -88,13 +88,11 @@ public class SceneManager : MonoBehaviour
                     isTiming = false;
                     Timer = 30;
                     NextLevel();
-                    m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
-                    m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
-                    m_SpawnManager.GetComponent<PickupPlank2>().enabled = false;
                 }
                 // Set number of active holes and usable holes
                 numOfActiveHoles = m_SessionManager.GetComponent<SpawnHoles>().maxHoles;
                 numOfUsablePlanks = m_SessionManager.GetComponent<SpawnPlanks>().maxPlanks;
+                Debug.Log("Number of active holes set to: " + numOfActiveHoles);
                 // Initiate grace period
                 StartCoroutine(BeginGracePeriod(GracePeriod, Stage.LEVEL_START));
                 ObjectiveTxt.text = "Grace period";
@@ -113,8 +111,12 @@ public class SceneManager : MonoBehaviour
     {
         currentLevel++;
         lvlText.text = "Level: " + currentLevel;
-        GetComponent<SpawnHoles>().maxHoles = (int) (GetComponent<SpawnHoles>().maxHoles * 1.25);
-        GetComponent<SpawnPlanks>().maxPlanks = GetComponent<SpawnHoles>().maxHoles;
+        m_SessionManager.GetComponent<SpawnHoles>().maxHoles = (int) (m_SessionManager.GetComponent<SpawnHoles>().maxHoles * 1.25);
+        m_SessionManager.GetComponent<SpawnPlanks>().maxPlanks = m_SessionManager.GetComponent<SpawnHoles>().maxHoles;
+        
+        m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
+        m_SessionManager.GetComponent<SpawnHoles>().RemoveAllHoles();
+        m_SpawnManager.GetComponent<PickupPlank2>().enabled = false;
     }
 
     IEnumerator BeginGracePeriod(float time, Stage NewStage) {

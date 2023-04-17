@@ -18,7 +18,7 @@ public class SplashScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        titleTxt.fontSize = (Mathf.PingPong(Time.time * 0.65f, 1) * 18) + 54;
+        titleTxt.fontSize = (Mathf.PingPong(Time.time * 0.65f, 1) * 18) + 84;
     }
 
     public void Play()

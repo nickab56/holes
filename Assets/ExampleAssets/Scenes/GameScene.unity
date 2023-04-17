@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -453,7 +453,7 @@ MonoBehaviour:
     type: 3}
   displayPlankPrefab: {fileID: 7359944846930789942, guid: b3dcc720155f94921a5cf6d0981b79e4,
     type: 3}
-  sceneManager: {fileID: 0}
+  sceneManager: {fileID: 188312361}
   plankSpawnPos: {x: 0, y: 0, z: 0}
 --- !u!850595691 &708004567
 LightingSettings:
