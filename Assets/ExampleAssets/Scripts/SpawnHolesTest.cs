@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-public class SpawnHoles2 : MonoBehaviour
+public class SpawnHoles : MonoBehaviour
 {
     public int maxHoles = 3;
 
@@ -42,7 +42,7 @@ public class SpawnHoles2 : MonoBehaviour
             Vector3 pos;
             ARPlane holePlane;
 
-            int max_requests = 100;
+            int maxAttempts = 100;
             // Check to ensure that each hole gets a random spot
             do
             {
@@ -50,16 +50,25 @@ public class SpawnHoles2 : MonoBehaviour
                 TrackableId planeId = trackableIDList[GetRandomPlane()];
                 holePlane = m_PlaneManager.GetPlane(planeId);
 
-                // Get random positions on plane (TODO)
-                // For development purposes, the holes currently spawn in the center of the plane
-                // (I believe) the planes are polygons. Therefore, we will need to determine how
-                // we can check to ensure that the holes will spawn within the plane via the list
-                // if boundaries found.
+                // Get random positions on plane
                 pos = holePlane.center;
-                //Vector2[] boundaries = holePlane.boundary.ToArray();
 
-                max_requests--;
-            } while (IsDuplicate(pos) || max_requests > 0);
+                // Get minimum and maxmium ranges of the plane
+                float xRange = holePlane.size.x/2;
+                float yRange = holePlane.size.y/2;
+
+                // Update the position based on the Plane's normal
+                if (holePlane.normal.x == 1.0f || holePlane.normal.x == -1.0f) {
+                    pos = new(pos.x, pos.y + Random.Range(-yRange, yRange), pos.z + Random.Range(-xRange, xRange));
+                } else if (holePlane.normal.y == 1.0f || holePlane.normal.y == -1.0f) {
+                    float bound = Mathf.Min(Mathf.Abs(xRange), Mathf.Abs(yRange)); 
+                    pos = new(pos.x + Random.Range(-bound, bound), pos.y, pos.z + Random.Range(-bound, bound));
+                } else {
+                    pos = new(pos.x + Random.Range(-xRange, xRange), pos.y + Random.Range(-yRange, yRange), pos.z);
+                }
+
+                maxAttempts--;
+            } while (IsDuplicate(pos) && maxAttempts > 0);
 
             Debug.Log("Hole #" + j + ": TrackableId: " + holePlane.trackableId);
             Debug.Log("Hole #" + j + ": Position: " + pos);
@@ -119,10 +128,10 @@ public class SpawnHoles2 : MonoBehaviour
 
     private bool IsDuplicate(Vector3 pos)
     {
-        Collider[] hits = Physics.OverlapSphere(pos, 1f);
+        Collider[] hits = Physics.OverlapSphere(pos, 0.5f);
         foreach (var hit in hits)
         {
-            if (hit.gameObject.CompareTag("Hole"))
+            if (hit.gameObject.CompareTag("Hole") || hit.gameObject.CompareTag("Plank"))
             {
                 return true;
             }

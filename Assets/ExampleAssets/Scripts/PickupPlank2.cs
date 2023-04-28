@@ -8,6 +8,7 @@ using UnityEngine.XR.ARSubsystems;
 public class PickupPlank2 : MonoBehaviour
 {
     public ARRaycastManager m_RaycastManager;
+    public ARPlaneManager m_PlaneManager;
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
 
     public GameObject PlanksPrefab;
@@ -52,6 +53,13 @@ public class PickupPlank2 : MonoBehaviour
                 else
                 {
                     GameObject spawnedPlank = Instantiate(PlanksPrefab, m_Hits[0].pose.position, Quaternion.identity);
+                    ARPlane hitPlane = m_PlaneManager.GetPlane(m_Hits[0].trackableId);
+                    if (hitPlane.alignment == PlaneAlignment.Vertical) {
+                        spawnedPlank.transform.Rotate(90, 0, 0);
+                        if (hitPlane.normal.x == 1.0f || hitPlane.normal.x == -1.0f) {
+                            spawnedPlank.transform.Rotate(0, 0, 90);
+                        }
+                    }
                     spawnedPlank.GetComponent<BlockHole>().sceneManager = sceneManager;
                     isHoldingPlank = false;
                     plankUI.enabled = false;

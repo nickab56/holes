@@ -150,7 +150,7 @@ public class SceneManager : MonoBehaviour
     {
         currentLevel++;
         lvlText.text = "Level: " + currentLevel;
-        m_SessionManager.GetComponent<SpawnHoles>().maxHoles = (int) (m_SessionManager.GetComponent<SpawnHoles>().maxHoles * 1.25);
+        m_SessionManager.GetComponent<SpawnHoles>().maxHoles = Mathf.CeilToInt(m_SessionManager.GetComponent<SpawnHoles>().maxHoles * 1.25f);
         m_SessionManager.GetComponent<SpawnPlanks>().maxPlanks = m_SessionManager.GetComponent<SpawnHoles>().maxHoles;
         
         m_SessionManager.GetComponent<SpawnPlanks>().ResetPlanks();
