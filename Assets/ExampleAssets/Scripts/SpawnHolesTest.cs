@@ -77,9 +77,13 @@ public class SpawnHoles : MonoBehaviour
             // Instantiate hole
             ARAnchor anchor = m_AnchorManager.AttachAnchor(holePlane, new Pose(pos, Quaternion.identity));
             GameObject newHole = Instantiate(holePrefab, anchor.transform);
-            if (holePlane.alignment == PlaneAlignment.Vertical) {
-                newHole.transform.Rotate(-90, 0, 0);
-            }
+            
+            Quaternion planeOrientation = Quaternion.LookRotation(holePlane.normal, Vector3.up);
+            newHole.transform.rotation = planeOrientation;
+            // Flip rotation
+            newHole.transform.rotation *= Quaternion.Euler(0, 180f, 0);
+            // Rotate X so that pipe isn't upside down
+            newHole.transform.Rotate(180, 0, 0);
 
             // Check if anchor is null before storing anchor
             if (anchor == null)
